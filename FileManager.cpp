@@ -19,7 +19,7 @@ bool file_sorter(const File& a, const File& b) {
     return a.name < b.name;
 }
 
-FileManager::FileManager(std::string path){
+FileManager::FileManager(std::string path) {
     this->path = std::move(path);
 }
 

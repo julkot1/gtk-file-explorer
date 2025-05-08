@@ -1,6 +1,6 @@
 #ifndef MY_WINDOW_H
 #define MY_WINDOW_H
-
+#pragma once
 #include <gtkmm.h>
 
 #include "FilesSpace.h"
@@ -10,6 +10,7 @@ class MyWindow : public Gtk::Window {
 public:
     MyWindow();
     ~MyWindow() override = default;
+    void update_files();
 
 protected:
     // Button click event handlers

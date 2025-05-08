@@ -68,6 +68,10 @@ MyWindow::MyWindow(): top_panel(&this->files_space) {
     show_all_children();
 }
 
+void MyWindow::update_files() {
+    this->top_panel.update();
+}
+
 // Button click event handlers
 void MyWindow::on_button1_clicked() {
     label.set_text("You clicked Button 1!");

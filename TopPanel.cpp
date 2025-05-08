@@ -41,21 +41,22 @@ void TopPanel::set_label_text(const std::string& text) {
 void TopPanel::on_left_button_clicked() {
     fs::path path = fm.getNextPath();
 
-    label.set_text(path.string());
-    auto f = fm.getFiles();
-    files_space->update(f);
+    this->update();
 }
 
 // Event handler for right arrow button click
 void TopPanel::on_right_button_clicked() {
     fs::path path = fm.getPrevPath();
-    label.set_text(path.string());
+    this->update();
+}
+
+void TopPanel::update() {
+    label.set_text(fm.getPath().c_str());
     auto f = fm.getFiles();
     files_space->update(f);
 }
 void TopPanel::on_parent_button_clicked() {
     fm.setParent();
-    label.set_text(fm.getPath().c_str());
-    auto f = fm.getFiles();
-    files_space->update(f);
+    this->update();
+
 }

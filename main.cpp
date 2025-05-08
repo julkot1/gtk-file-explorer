@@ -7,6 +7,8 @@
 
 namespace fs = std::filesystem;
 
+MyWindow *window_ptr;
+
 FileManager fm(fs::current_path());
 
 
@@ -17,5 +19,6 @@ int main(int argc, char* argv[]) {
         std::cout << f.name << " " << f.type << std::endl;
     }
     MyWindow window;
+    window_ptr = &window;
     return app->run(window);
 }

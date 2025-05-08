@@ -14,6 +14,7 @@ public:
     ~TopPanel() override = default;
 
     void set_label_text(const std::string& text);
+    void update();
 
 protected:
     // Event handlers for buttons

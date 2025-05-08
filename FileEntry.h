@@ -16,6 +16,9 @@ class FileEntry : public Gtk::EventBox{
     FileEntry(File f);
     ~FileEntry() override = default;
     Gtk::Label label;
+    Gtk::Box vbox{Gtk::ORIENTATION_VERTICAL};
+    Gtk::Image image;
+
 protected:
     bool on_box_hover(GdkEventCrossing *event);
     bool on_box_unhover(GdkEventCrossing *event);

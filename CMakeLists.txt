@@ -20,5 +20,7 @@ add_executable(gtk main.cpp
         FilesSpace.cpp
         FilesSpace.h
         FileEntry.cpp
-        FileEntry.h)
+        FileEntry.h
+        FilespaceContextMenu.cpp
+        FilespaceContextMenu.h)
 target_link_libraries(gtk ${GTKMM_LIBRARIES})

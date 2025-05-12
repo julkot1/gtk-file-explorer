@@ -9,9 +9,10 @@
 #include <gtkmm.h>
 
 #include "FileEntry.h"
+#include "FilespaceContextMenu.h"
 
 
-class FilesSpace :public Gtk::Box{
+class FilesSpace :public Gtk::Paned{
 public:
     FilesSpace();
     ~FilesSpace() override = default;
@@ -20,6 +21,8 @@ private:
     Gtk::Label label;
     Gtk::FlowBox grid;
     std::vector<std::unique_ptr<FileEntry>> files;
+    FilespaceContextMenu context_menu;
+    bool on_box_button_press(GdkEventButton* button_event);
 };
 
 

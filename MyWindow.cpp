@@ -1,70 +1,80 @@
-
 #include "MyWindow.h"
 
-
-const char* css_data = R"(
+auto css_data = R"(
 .hovered {
     background-color: @selected_bg_color;
 }
 )";
 
-MyWindow::MyWindow(): top_panel(&this->files_space) {
+MyWindow::MyWindow() : top_panel(&this->files_space) {
     set_title("GTKmm App");
-    set_default_size(800, 400);
+    set_default_size(1000, 800);
 
+    // Apply CSS
     auto css_provider = Gtk::CssProvider::create();
     css_provider->load_from_data(css_data);
-
     auto screen = Gdk::Screen::get_default();
     Gtk::StyleContext::add_provider_for_screen(
         screen, css_provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
+    // Left VBox (Buttons)
+    vbox.set_spacing(20);
+    vbox.set_margin_top(20);
+    vbox.set_margin_bottom(20);
+    vbox.set_margin_start(10);
+    vbox.set_margin_end(10);
 
-    // === Left Panel (Side panel with buttons) ===
-    vbox.set_spacing(10);
     vbox.pack_start(button1, Gtk::PACK_SHRINK);
     vbox.pack_start(button2, Gtk::PACK_SHRINK);
     vbox.pack_start(button3, Gtk::PACK_SHRINK);
 
-    vbox.set_spacing(20); // Set spacing between buttons
-    vbox.set_margin_top(20); // Add top margin to the VBox
-    vbox.set_margin_bottom(20); // Add bottom margin to the VBox
-    vbox.set_margin_start(10); // Add left margin to the VBox
-    vbox.set_margin_end(10); // Add right margin to the VBox
-
-    // Connect button signals
     button1.signal_clicked().connect(sigc::mem_fun(*this, &MyWindow::on_button1_clicked));
     button2.signal_clicked().connect(sigc::mem_fun(*this, &MyWindow::on_button2_clicked));
     button3.signal_clicked().connect(sigc::mem_fun(*this, &MyWindow::on_button3_clicked));
 
-    // Add VBox to a scrolled window (optional for better scrolling when the window is small)
+    // Scrollable left panel
     scroll_left.add(vbox);
     scroll_left.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
 
-    // === Right Panel (Center panel with text) ===
+    // Label (could be used somewhere, not yet packed)
     label.set_text("Welcome! Select a button to display text here.");
-    label.set_padding(20, 20); // Add some padding around the text
+    label.set_padding(20, 20);
 
-    // Add label to scrolled window
-
-    // === Main Vertical Box (vbox_top) ===
-    vbox_top.set_spacing(10); // Set spacing between elements in vbox_top
-
-    // Add the horizontal box (vbox2) at the top of the main container
+    // Top container (e.g., for navigation or toolbar)
+    vbox_top.set_spacing(10);
     vbox_top.pack_start(top_panel, Gtk::PACK_SHRINK);
 
-    // === Paned Widget (splitting left and right panels) ===
-    hpaned.set_position(200); // Set initial size for the side panel
-    hpaned.add1(scroll_left); // Add the left side panel to the first part of the paned
+    // === Paned Widget ===
+    hpaned.set_position(200);
+    hpaned.set_hexpand(true);
+    hpaned.set_vexpand(true);
+
+    // Add left panel to first pane
+    hpaned.add1(scroll_left);
+
+    // Update right panel
     auto f = fm.getFiles();
     files_space.update(f);
-    hpaned.add2(files_space); // Add the right side panel to the second part of the paned
 
-    // Add the vertical box (vbox_top) and paned to the main window
-    vbox_top.pack_start(hpaned); // Add the paned below the top horizontal box
+    // Make files_space scrollable
+    Gtk::ScrolledWindow* scroll_files = Gtk::manage(new Gtk::ScrolledWindow());
+    scroll_files->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    scroll_files->add(files_space);
+    scroll_files->set_hexpand(true);
+    scroll_files->set_vexpand(true);
+
+    files_space.set_hexpand(true);
+    files_space.set_vexpand(true);
+
+    // Add scrollable files_space to second pane
+    hpaned.add2(*scroll_files);
+
+    // Pack paned into top container
+    vbox_top.pack_start(hpaned, Gtk::PACK_EXPAND_WIDGET);
+    vbox_top.set_hexpand(true);
+    vbox_top.set_vexpand(true);
 
     add(vbox_top);
-
     show_all_children();
 }
 
@@ -72,7 +82,7 @@ void MyWindow::update_files() {
     this->top_panel.update();
 }
 
-// Button click event handlers
+// Button handlers
 void MyWindow::on_button1_clicked() {
     label.set_text("You clicked Button 1!");
 }

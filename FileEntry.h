@@ -18,6 +18,7 @@ class FileEntry : public Gtk::EventBox{
     Gtk::Label label;
     Gtk::Box vbox{Gtk::ORIENTATION_VERTICAL};
     Gtk::Image image;
+    Gtk::Menu context_menu;
 
 protected:
     bool on_box_hover(GdkEventCrossing *event);

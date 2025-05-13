@@ -5,7 +5,7 @@
 #ifndef FILEEXPLOERMANAGER_H
 #define FILEEXPLOERMANAGER_H
 #include <string>
-
+#include <giomm.h>
 #include <filesystem>
 #include <vector>
 
@@ -30,8 +30,12 @@ public:
     void setParent();
     fs::path getPrevPath();
     fs::path getNextPath();
-
     std::vector<File> getFiles();
+
+
+    void copy_files();
+    void cut_files();
+    void paste_files();
 
 };
 

@@ -87,10 +87,10 @@ MyWindow::MyWindow() : top_panel(&this->files_space) {
 }
 
 void MyWindow::update_files() {
+    this->selected.clear();
     this->top_panel.update();
 }
 
-// Button handlers
 void MyWindow::on_button1_clicked() {
     label.set_text("You clicked Button 1!");
 }

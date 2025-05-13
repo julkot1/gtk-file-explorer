@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <gtkmm/stock.h>
 
-File::File(std::string name, const FileType type): name(std::move(name)), type(type) {
+File::File(std::string name, const FileType type, std::string path): name(std::move(name)), path(std::move(path)), type(type) {
 }
 bool file_sorter(const File& a, const File& b) {
     if (a.type != b.type)
@@ -67,7 +67,7 @@ std::vector<File> FileManager::getFiles() {
     std::vector<File> vec;
     if (fs::exists(this->path) && fs::is_directory(this->path)) {
         for (const auto& entry : fs::directory_iterator(this->path)) {
-            vec.push_back(File(entry.path().filename().string(), entry.is_directory() ? DIRECTORY_TYPE : FILE_TYPE));
+            vec.push_back(File(entry.path().filename().string(), entry.is_directory() ? DIRECTORY_TYPE : FILE_TYPE, entry.path().string()));
         }
     } else {
         std::cerr << "Invalid path: " << path << '\n';

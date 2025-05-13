@@ -1,6 +1,9 @@
 #include "TopPanel.h"
 #include <iostream>
 
+#include "MyWindow.h"
+
+extern MyWindow* window_ptr;
 TopPanel::TopPanel(FilesSpace *files_space)
     : left_button("←"), right_button("→"), parent_button("^"), files_space(files_space)// Initialize the buttons with arrows
 {
@@ -40,23 +43,27 @@ void TopPanel::set_label_text(const std::string& text) {
 // Event handler for left arrow button click
 void TopPanel::on_left_button_clicked() {
     fs::path path = fm.getNextPath();
-
     this->update();
+    window_ptr->update_files();
 }
 
 // Event handler for right arrow button click
 void TopPanel::on_right_button_clicked() {
     fs::path path = fm.getPrevPath();
     this->update();
+    window_ptr->update_files();
+
 }
 
 void TopPanel::update() {
     label.set_text(fm.getPath().c_str());
     auto f = fm.getFiles();
     files_space->update(f);
+
 }
 void TopPanel::on_parent_button_clicked() {
     fm.setParent();
     this->update();
+    window_ptr->update_files();
 
 }

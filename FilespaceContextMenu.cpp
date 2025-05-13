@@ -11,7 +11,7 @@
 #include <filesystem>   // C++17 for path manipulation
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/messagedialog.h>
-
+#include <giomm.h>
 extern MyWindow *window_ptr;
 extern FileManager fm;
 
@@ -34,15 +34,94 @@ void FilespaceContextMenu::create_menu() {
 
     new_submenu->append(*new_file_item);
     new_submenu->append(*new_folder_item);
+
     select_all_item = Gtk::manage(new Gtk::MenuItem("Select all", true));
     select_all_item->signal_activate().connect(sigc::mem_fun(*this, &FilespaceContextMenu::select_all));
 
+    copy_files_item = Gtk::manage(new Gtk::MenuItem("Copy", true));
+    copy_files_item->signal_activate().connect(sigc::mem_fun(*this, &FilespaceContextMenu::copy_files));
+
+
+    paste_files_item = Gtk::manage(new Gtk::MenuItem("Paste", true));
+    paste_files_item->signal_activate().connect(sigc::mem_fun(*this, &FilespaceContextMenu::paste_files));
+
+
+    cut_files_item = Gtk::manage(new Gtk::MenuItem("Cut", true));
+    delete_files_item = Gtk::manage(new Gtk::MenuItem("Delete", true));
+    delete_files_item->signal_activate().connect(sigc::mem_fun(*this, &FilespaceContextMenu::delete_files));
 
     new_menu_item->set_submenu(*new_submenu);
 
 
     append(*new_menu_item);
+    auto separator = Gtk::manage(new Gtk::SeparatorMenuItem());
+    append(*separator);
     append(*select_all_item);
+    append(*copy_files_item);
+    append(*paste_files_item);
+    append(*cut_files_item);
+    append(*delete_files_item);
+
+}
+
+void FilespaceContextMenu::paste_files() {
+    auto clipboard = Gtk::Clipboard::get();  // Get the clipboard
+    auto destination_dir = fm.getPath().string();
+    clipboard->request_text([destination_dir](const Glib::ustring& text) {
+        std::istringstream stream(text);
+        std::string operation;
+        std::getline(stream, operation);  // "copy" or "cut"
+
+        std::string uri;
+        while (std::getline(stream, uri)) {
+            if (uri.empty()) continue;
+
+            // Extract the file from the URI
+            auto src_file = Gio::File::create_for_uri(uri);
+            auto filename = src_file->get_basename();
+            auto dest_file = Gio::File::create_for_path(destination_dir + "/" + filename);
+
+            try {
+                if (operation == "cut") {
+                    src_file->move(dest_file, Gio::FILE_COPY_OVERWRITE);  // Cut operation
+                    std::cout << "Moved: " << filename << "\n";
+                } else {
+                    src_file->copy(dest_file, Gio::FILE_COPY_OVERWRITE);  // Copy operation
+                    std::cout << "Copied: " << filename << "\n";
+                }
+            } catch (const Glib::Error& e) {
+                std::cerr << "Error handling file " << filename << ": " << e.what() << "\n";
+            }
+        }
+    });
+    window_ptr->update_files();
+}
+
+void FilespaceContextMenu::copy_files() {
+    std::string clipboard_data = "copy\n";
+    for (const auto& path : window_ptr->selected) {
+        Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(path->file.path);
+        clipboard_data += file->get_uri() + "\n";
+    }
+    std::cout << clipboard_data;
+    auto clipboard = Gtk::Clipboard::get();
+    clipboard->set_text(clipboard_data);
+}
+void FilespaceContextMenu::delete_files() {
+    for (auto f : window_ptr->selected) {
+
+        try {
+            if (std::filesystem::remove(f->file.path)) {
+                std::cout << "File deleted successfully.\n";
+            } else {
+                std::cout << "File not found or couldn't be deleted.\n";
+            }
+        } catch (const std::filesystem::filesystem_error& e) {
+            std::cerr << "Error: " << e.what() << "\n";
+        }
+    }
+
+    window_ptr->update_files();
 }
 void FilespaceContextMenu::show_new_folder_dialog() {
     Gtk::Dialog dialog("New Folder", true);

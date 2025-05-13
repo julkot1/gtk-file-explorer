@@ -21,10 +21,16 @@ private:
     Gtk::MenuItem* new_file_item;
     Gtk::MenuItem* new_folder_item;
     Gtk::MenuItem* select_all_item;
+    Gtk::MenuItem* copy_files_item;
+    Gtk::MenuItem* cut_files_item;
+    Gtk::MenuItem* paste_files_item;
+    Gtk::MenuItem* delete_files_item;
 
     void show_new_file_dialog();
     void show_new_folder_dialog();
-
+    void delete_files();
+    void copy_files();
+    void paste_files();
 
 };
 

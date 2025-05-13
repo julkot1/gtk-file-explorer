@@ -13,9 +13,10 @@ enum  FileType {
 class File {
 public:
     std::string name;
+    std::filesystem::path path;
     FileType type;
 
-    File(std::string name, FileType type);
+    File(std::string name, FileType type, std::string path);
     friend bool file_sorter(const File& a, const File& b);
 };
 #endif //FILE_H

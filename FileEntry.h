@@ -13,8 +13,9 @@
 extern FileManager fm;
 
 class FileEntry : public Gtk::EventBox{
-    File file;
+
     public:
+    File file;
     FileEntry(File f);
     ~FileEntry() override = default;
     Gtk::Label label;

@@ -7,9 +7,11 @@
 
 #include <gtkmm.h>
 
+
 #include "FileManager.h"
 
 extern FileManager fm;
+
 class FileEntry : public Gtk::EventBox{
     File file;
     public:

@@ -11,7 +11,6 @@
 #include <gtkmm/stock.h>
 
 File::File(std::string name, const FileType type): name(std::move(name)), type(type) {
-
 }
 bool file_sorter(const File& a, const File& b) {
     if (a.type != b.type)

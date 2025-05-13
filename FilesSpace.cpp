@@ -31,7 +31,8 @@ bool FilesSpace::on_box_button_press(GdkEventButton* button_event) {
         context_menu.show_at_pointer(button_event);
         return true; // Event handled (don't propagate further)
     }
-    return false; // Event not handled (let others handle it)
+
+    return true; // Event not handled (let others handle it)
 }
 
 void FilesSpace::update(std::vector<File> &files) {

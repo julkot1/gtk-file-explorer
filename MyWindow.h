@@ -6,17 +6,22 @@
 #include "FilesSpace.h"
 #include "TopPanel.h"
 
+
 class MyWindow : public Gtk::Window {
 public:
     MyWindow();
     ~MyWindow() override = default;
     void update_files();
+    std::vector<FileEntry *> selected;
 
 protected:
     // Button click event handlers
     void on_button1_clicked();
     void on_button2_clicked();
     void on_button3_clicked();
+    bool on_button_release_event(GdkEventKey* event);
+    bool on_button_press_event(GdkEventKey* event);
+
 
 private:
     // Paned to split the window into left and right

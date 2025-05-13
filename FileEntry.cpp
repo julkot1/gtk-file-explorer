@@ -5,7 +5,6 @@
 #include "FileEntry.h"
 
 #include <iostream>
-
 #include "MyWindow.h"
 extern MyWindow *window_ptr;
 
@@ -63,7 +62,7 @@ bool FileEntry::on_event_box_click(GdkEventButton* event) {
 
     } else if (event->button == 2) { // Middle mouse button
         std::cout << "Middle click detected!" << std::endl;
-    } if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) { // Right-click
+    } else if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) { // Right-click
         // Create the context menu items
         context_menu = Gtk::Menu();
 
@@ -81,7 +80,31 @@ bool FileEntry::on_event_box_click(GdkEventButton* event) {
 
         // Show menu at mouse position (make sure it shows at the location of the click)
         context_menu.popup_at_pointer(reinterpret_cast<GdkEvent*>(event));
-        return true; // Event handled (don't propagate further)
+        return true;
+    } else if (event->button == 1 && event->type == GDK_BUTTON_PRESS) {
+        if (get_style_context()->has_class("selected")) {
+            get_style_context()->remove_class("selected");
+            window_ptr->selected.erase(std::remove(window_ptr->selected.begin(), window_ptr->selected.end(), this), window_ptr->selected.end());
+
+            for (auto f : window_ptr->selected) {
+
+                std::cout << f->file.name << std::endl;
+            }
+
+            return true;
+        }
+        get_style_context()->add_class("selected");
+
+        if (fm.selectMode == false) {
+            for (auto f : window_ptr->selected) {
+                f->get_style_context()->remove_class("selected");
+            }
+            window_ptr->selected.clear();
+        }
+        window_ptr->selected.push_back(this);
+        for (auto f : window_ptr->selected) {
+            std::cout << f->file.name << std::endl;
+        }
     }
 
     return false;

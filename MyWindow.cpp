@@ -1,21 +1,29 @@
 #include "MyWindow.h"
 
+#include <iostream>
+
 auto css_data = R"(
 .hovered {
     background-color: @selected_bg_color;
 }
+.selected {
+    background-color: @selected_bg_color;
+}
 )";
+extern FileManager fm;
 
 MyWindow::MyWindow() : top_panel(&this->files_space) {
     set_title("GTKmm App");
     set_default_size(1000, 800);
 
-    // Apply CSS
     auto css_provider = Gtk::CssProvider::create();
     css_provider->load_from_data(css_data);
     auto screen = Gdk::Screen::get_default();
     Gtk::StyleContext::add_provider_for_screen(
         screen, css_provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    add_events(Gdk::KEY_PRESS_MASK | Gdk::KEY_RELEASE_MASK);
+    signal_key_press_event().connect(sigc::mem_fun(*this, &MyWindow::on_button_press_event));
+    signal_key_release_event().connect(sigc::mem_fun(*this, &MyWindow::on_button_release_event));
 
     // Left VBox (Buttons)
     vbox.set_spacing(20);
@@ -94,3 +102,17 @@ void MyWindow::on_button2_clicked() {
 void MyWindow::on_button3_clicked() {
     label.set_text("You clicked Button 3!");
 }
+
+bool MyWindow::on_button_release_event(GdkEventKey *event) {
+    if (event->keyval == GDK_KEY_Control_L) {}
+        fm.selectMode = false;
+    return true;
+
+}
+bool MyWindow::on_button_press_event(GdkEventKey *event) {
+   if (event->keyval ==  GDK_KEY_Control_L)
+        fm.selectMode = true;
+    return true;
+}
+
+

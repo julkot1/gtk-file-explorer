@@ -21,7 +21,7 @@ FilespaceContextMenu::FilespaceContextMenu() {
 void FilespaceContextMenu::create_menu() {
    // Create the "New" menu item with a submenu
    new_menu_item = Gtk::manage(new Gtk::MenuItem("New", true));
-   new_submenu = Gtk::manage(new Gtk::Menu());  // Submenu for "New"
+   new_submenu = Gtk::manage(new Gtk::Menu());
 
    new_file_item = Gtk::manage(new Gtk::MenuItem("File", true));
    new_folder_item = Gtk::manage(new Gtk::MenuItem("Folder", true));

@@ -9,28 +9,20 @@
 #include <filesystem>
 #include <vector>
 
-
+#include "File.h"
 
 namespace fs = std::filesystem;
 
-enum  FileType {
-    DIRECTORY_TYPE,
-    FILE_TYPE
-};
-class File {
-public:
-    std::string name;
-    FileType type;
 
-    File(std::string name, FileType type);
-    friend bool file_sorter(const File& a, const File& b);
-};
 class FileManager {
     fs::path path;
     std::vector<fs::path> history;
+
     int currentIndex = 0;
     void addToHistory();
 public:
+    std::vector<File *> filesSelected;
+    bool selectMode = false;
     explicit FileManager(std::string path);
 
     fs::path getPath();

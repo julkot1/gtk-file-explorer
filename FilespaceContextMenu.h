@@ -20,8 +20,10 @@ private:
     Gtk::MenuItem* new_file_item;
     Gtk::MenuItem* new_folder_item;
 
+
     void show_new_file_dialog();
     void show_new_folder_dialog();
+
 
 };
 

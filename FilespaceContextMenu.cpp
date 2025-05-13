@@ -107,11 +107,44 @@ void FilespaceContextMenu::copy_files() {
     auto clipboard = Gtk::Clipboard::get();
     clipboard->set_text(clipboard_data);
 }
+
+
+void remove_directory_recursively(const std::string& dir_path) {
+    try {
+        // Check if the directory exists
+        if (fs::exists(dir_path) && fs::is_directory(dir_path)) {
+            // Iterate through the directory and remove files/subdirectories
+            for (const auto& entry : fs::directory_iterator(dir_path)) {
+                const fs::path& child_path = entry.path();
+                if (fs::is_directory(child_path)) {
+                    // If it's a directory, recursively call the function
+                    remove_directory_recursively(child_path);
+                } else {
+                    // If it's a file, remove it
+                    fs::remove(child_path);
+                    std::cout << "Removed file: " << child_path << std::endl;
+                }
+            }
+
+            // Now that all children are removed, remove the empty directory
+            fs::remove(dir_path);
+            std::cout << "Removed directory: " << dir_path << std::endl;
+        } else {
+            std::cerr << "Directory does not exist or is not a directory: " << dir_path << std::endl;
+        }
+    } catch (const fs::filesystem_error& e) {
+        std::cerr << "Error removing directory: " << e.what() << std::endl;
+    }
+}
+
 void FilespaceContextMenu::delete_files() {
     for (auto f : window_ptr->selected) {
 
         try {
-            if (std::filesystem::remove(f->file.path)) {
+            if(f->file.type == DIRECTORY_TYPE) {
+                remove_directory_recursively(f->file.path);
+            }
+            else if (std::filesystem::remove(f->file.path)) {
                 std::cout << "File deleted successfully.\n";
             } else {
                 std::cout << "File not found or couldn't be deleted.\n";

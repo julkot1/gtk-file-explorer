@@ -13,6 +13,7 @@ public:
     ~MyWindow() override = default;
     void update_files();
     std::vector<FileEntry *> selected;
+    FilesSpace files_space;
 
 protected:
     // Button click event handlers
@@ -42,7 +43,7 @@ private:
     Gtk::Box vbox_top{Gtk::ORIENTATION_VERTICAL};  // The main vertical box for the window
 
     TopPanel top_panel;
-    FilesSpace files_space;
+
 };
 
 #endif // MY_WINDOW_H

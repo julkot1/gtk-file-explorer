@@ -106,12 +106,19 @@ void MyWindow::on_button3_clicked() {
 bool MyWindow::on_button_release_event(GdkEventKey *event) {
     if (event->keyval == GDK_KEY_Control_L) {}
         fm.selectMode = false;
+
     return true;
 
 }
 bool MyWindow::on_button_press_event(GdkEventKey *event) {
+    if (event->state & GDK_CONTROL_MASK) {
+        if (event->keyval == GDK_KEY_a) {
+            files_space.selectAll();
+        }
+    }
    if (event->keyval ==  GDK_KEY_Control_L)
         fm.selectMode = true;
+
     return true;
 }
 

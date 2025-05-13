@@ -1,6 +1,10 @@
 #include "FilesSpace.h"
 #include <iostream>
 
+#include "MyWindow.h"
+
+
+extern MyWindow* window_ptr;
 FilesSpace::FilesSpace() : label("sfdfdf") {
     set_margin_top(10);
     set_margin_bottom(10);
@@ -51,4 +55,13 @@ void FilesSpace::update(std::vector<File> &files) {
     }
 
     show_all_children();  // Ensure everything is displayed
+}
+void FilesSpace::selectAll() {
+
+    window_ptr->selected.clear();
+    for (std::shared_ptr<FileEntry> entry : files) {
+        entry.get()->get_style_context()->add_class("selected");
+        window_ptr->selected.push_back(entry.get());
+
+    }
 }

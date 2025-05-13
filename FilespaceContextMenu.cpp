@@ -20,26 +20,29 @@ FilespaceContextMenu::FilespaceContextMenu() {
 }
 void FilespaceContextMenu::create_menu() {
    // Create the "New" menu item with a submenu
-   new_menu_item = Gtk::manage(new Gtk::MenuItem("New", true));
-   new_submenu = Gtk::manage(new Gtk::Menu());
+    new_menu_item = Gtk::manage(new Gtk::MenuItem("New", true));
+    new_submenu = Gtk::manage(new Gtk::Menu());
 
-   new_file_item = Gtk::manage(new Gtk::MenuItem("File", true));
-   new_folder_item = Gtk::manage(new Gtk::MenuItem("Folder", true));
-
-
-   new_file_item->signal_activate().connect(sigc::mem_fun(*this, &FilespaceContextMenu::show_new_file_dialog));
-
-   new_folder_item->signal_activate().connect(sigc::mem_fun(*this, &FilespaceContextMenu::show_new_folder_dialog));
+    new_file_item = Gtk::manage(new Gtk::MenuItem("File", true));
+    new_folder_item = Gtk::manage(new Gtk::MenuItem("Folder", true));
 
 
-   new_submenu->append(*new_file_item);
-   new_submenu->append(*new_folder_item);
+    new_file_item->signal_activate().connect(sigc::mem_fun(*this, &FilespaceContextMenu::show_new_file_dialog));
+
+    new_folder_item->signal_activate().connect(sigc::mem_fun(*this, &FilespaceContextMenu::show_new_folder_dialog));
 
 
-   new_menu_item->set_submenu(*new_submenu);
+    new_submenu->append(*new_file_item);
+    new_submenu->append(*new_folder_item);
+    select_all_item = Gtk::manage(new Gtk::MenuItem("Select all", true));
+    select_all_item->signal_activate().connect(sigc::mem_fun(*this, &FilespaceContextMenu::select_all));
 
 
-   append(*new_menu_item);
+    new_menu_item->set_submenu(*new_submenu);
+
+
+    append(*new_menu_item);
+    append(*select_all_item);
 }
 void FilespaceContextMenu::show_new_folder_dialog() {
     Gtk::Dialog dialog("New Folder", true);
@@ -127,6 +130,9 @@ void FilespaceContextMenu::show_new_file_dialog() {
     }
 }
 
+void FilespaceContextMenu::select_all() {
+    window_ptr->files_space.selectAll();
+}
 
 void FilespaceContextMenu::show_at_pointer(GdkEventButton *button_event) {
     show_all();

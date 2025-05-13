@@ -13,13 +13,14 @@ class FilespaceContextMenu : public Gtk::Menu{
     ~FilespaceContextMenu() override = default;
     void create_menu();
     void show_at_pointer(GdkEventButton* button_event);
-
+protected:
+    void select_all();
 private:
     Gtk::MenuItem* new_menu_item;
     Gtk::Menu* new_submenu;
     Gtk::MenuItem* new_file_item;
     Gtk::MenuItem* new_folder_item;
-
+    Gtk::MenuItem* select_all_item;
 
     void show_new_file_dialog();
     void show_new_folder_dialog();

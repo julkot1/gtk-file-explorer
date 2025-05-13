@@ -85,15 +85,8 @@ bool FileEntry::on_event_box_click(GdkEventButton* event) {
         if (get_style_context()->has_class("selected")) {
             get_style_context()->remove_class("selected");
             window_ptr->selected.erase(std::remove(window_ptr->selected.begin(), window_ptr->selected.end(), this), window_ptr->selected.end());
-
-            for (auto f : window_ptr->selected) {
-
-                std::cout << f->file.name << std::endl;
-            }
-
-            return true;
         }
-        get_style_context()->add_class("selected");
+        else get_style_context()->add_class("selected");
 
         if (fm.selectMode == false) {
             for (auto f : window_ptr->selected) {
